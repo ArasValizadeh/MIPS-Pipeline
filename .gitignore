@@ -1,0 +1,14 @@
+# Icarus Verilog build artifacts
+sim/*.vvp
+sim/*.vcd
+*.vcd
+*.vvp
+*.out
+a.out
+
+# Editor / OS
+.DS_Store
+*.swp
+*~
+.idea/
+.vscode/

@@ -1,0 +1,15 @@
+// Fibonacci up to f(5). One 32-bit instruction per word.
+// Preconditions (set by the testbench): $30 = 1, $31 = 1, mem[0] = 0, mem[1] = 1
+8C000000    // 0  lw   $0,  0($0)     no-op, $zero is hard-wired
+8C010001    // 1  lw   $1,  1($0)     $1  = f(1) = 1
+03FEF020    // 2  add  $30, $31, $30  i++
+00011020    // 3  add  $2,  $0,  $1   $2  = 1
+00221820    // 4  add  $3,  $1,  $2   $3  = 2
+03FEF020    // 5  add  $30, $31, $30  i++
+00622020    // 6  add  $4,  $3,  $2   $4  = 3
+03FEF020    // 7  add  $30, $31, $30  i++
+00832820    // 8  add  $5,  $4,  $3   $5  = 5
+03FEF020    // 9  add  $30, $31, $30  i++  (i == 5)
+28AA0006    // 10 slti $10, $5,  6    $10 = 1
+13C50002    // 11 beq  $30, $5,  2    taken, skips the store
+AC210000    // 12 sw   $1,  0($1)     not executed

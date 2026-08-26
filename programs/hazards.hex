@@ -1,0 +1,20 @@
+// Every hazard class the pipeline has to handle.
+// Preconditions (set by the testbench): $8 = 5, $9 = 3, everything else 0.
+01090820    // 0  add $1, $8, $9     $1 = 8
+00291020    // 1  add $2, $1, $9     $2 = 11   EX/MEM -> EX forwarding
+00411820    // 2  add $3, $2, $1     $3 = 19   EX/MEM and MEM/WB forwarding
+AC030000    // 3  sw  $3, 0($0)      mem[0] = 19, store data forwarded
+8C040000    // 4  lw  $4, 0($0)      $4 = 19
+00892820    // 5  add $5, $4, $9     $5 = 22   load-use: one stall, then forward
+00A03020    // 6  add $6, $5, $0     $6 = 22
+10C50002    // 7  beq $6, $5, 2      taken: operand still in EX, needs a stall
+01297020    // 8  add $14, $9, $9    skipped, so $14 must stay 0
+01097820    // 9  add $15, $8, $9    skipped, so $15 must stay 0
+01083820    // 10 add $7, $8, $8     $7 = 10   branch target
+AC070001    // 11 sw  $7, 1($0)      mem[1] = 10
+00008020    // 12 add $16, $0, $0    $16 = 0
+12110002    // 13 beq $16, $17, 2    taken; while stalled its stale operands also
+            //                      compare equal, which must not flush IF/ID
+01299020    // 14 add $18, $9, $9    skipped, so $18 must stay 0
+01299820    // 15 add $19, $9, $9    skipped, so $19 must stay 0
+0108A020    // 16 add $20, $8, $8    $20 = 10  branch target

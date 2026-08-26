@@ -1,0 +1,7 @@
+// Exercises the two-cycle data memory of the 6-stage pipeline.
+// Preconditions (set by the testbench): $8 = 5, $9 = 3
+01095020    // 0  add $10, $8,  $9   $10 = 8
+AC0A0000    // 1  sw  $10, 0($0)     mem[0] = 8   (high half in MEM1, low half in MEM2)
+8C0C0000    // 2  lw  $12, 0($0)     $12 = 8      (reads the halves back)
+01896820    // 3  add $13, $12, $9   $13 = 11     load-use, forwarded out of MEM2
+01495822    // 4  sub $11, $10, $9   $11 = 5
